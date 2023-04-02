@@ -3,7 +3,6 @@ package com.github.io.mangjoo.realworld.auth.domain
 import com.github.io.mangjoo.realworld.auth.common.BaseTimeEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
 import jakarta.persistence.EnumType.*
 import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
@@ -31,6 +30,24 @@ class UserEntity(
     @Enumerated(STRING)
     var role: Role
 ) : BaseTimeEntity() {
+    constructor(
+        email: String,
+        password: String,
+        username: String,
+        bio: String,
+        image: String,
+        isEnabled: Boolean,
+        role: Role
+    ) : this(
+        id = 0,
+        email = email,
+        password = password,
+        username = username,
+        bio = bio,
+        image = image,
+        isEnabled = isEnabled,
+        role = role
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
