@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 private val HttpServletResponse?.checkResponse: HttpServletResponse
     get() = this ?: error("Response must not be null")
 
-private val HttpServletResponse?.setResponseType: HttpServletResponse
+private val HttpServletResponse?.setSuccessResponseType: HttpServletResponse
     get() = this.checkResponse
         .apply {
             contentType = APPLICATION_JSON_VALUE
@@ -34,7 +34,7 @@ class SuccessHandler(
 ) : AuthenticationSuccessHandler {
     override fun onAuthenticationSuccess(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
         val jwt = jwtCreate.createToken(authentication.convertByPrcinpalLongId, authentication.convertByRole)
-        response.setResponseType
+        response.setSuccessResponseType
             .writer
             .write(jwt)
     }
