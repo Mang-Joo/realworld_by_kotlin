@@ -37,6 +37,5 @@ class SuccessHandler(
         response.setResponseType
             .writer
             .write(jwt)
-//            .apply { jacksonObjectMapper().writeValue(writer, jwt) }
     }
 }

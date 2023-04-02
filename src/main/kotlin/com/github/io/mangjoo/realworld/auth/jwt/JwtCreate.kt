@@ -1,38 +1,32 @@
 package com.github.io.mangjoo.realworld.auth.jwt
 
 import io.jsonwebtoken.Header.*
-import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm.*
-import io.jsonwebtoken.security.Keys
 import java.nio.charset.StandardCharsets.*
-import java.security.Key
-import java.util.Date
+import java.time.Instant
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.oauth2.jwt.JwtClaimsSet
+import org.springframework.security.oauth2.jwt.JwtEncoder
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters
 import org.springframework.stereotype.Component
 
 
 @Component
 class JwtCreate(
-    @Value("\${jwt.token.secretKey}")
-    private val secret: String,
+    private val jwtEncoder: JwtEncoder,
     @Value("\${jwt.token.time}")
     private val time: Long,
 ) {
-    private val key: Key = Keys.hmacShaKeyFor(secret.toByteArray(UTF_8))
-    private val now = Date()
+    private val now = Instant.now()
 
-    fun createToken(userId: Long, role: GrantedAuthority): String =
-        Jwts.builder()
-            .setHeaderParam(TYPE, JWT_TYPE)
-            .setIssuedAt(now)
-            .setExpiration(Date(now.time + time))
-            .setId(userId.toString())
-            .setClaims(body(userId.toString(), role.authority))
-            .signWith(key, HS256)
-            .compact()
-
-    private fun body(userId: String, role: String) = Jwts.claims()
-        .also { it.subject = userId }
-        .also { it["role"] = role }
+    fun createToken(userId: Long, role: GrantedAuthority): String = JwtClaimsSet.builder()
+        .issuer("realworld")
+        .issuedAt(Instant.now())
+        .expiresAt(now.plusSeconds(time))
+        .subject(userId.toString())
+        .claims { it["role"] = role.authority }
+        .build()
+        .let { JwtEncoderParameters.from(it) }
+        .let { jwtEncoder.encode(it).tokenValue }
 }
