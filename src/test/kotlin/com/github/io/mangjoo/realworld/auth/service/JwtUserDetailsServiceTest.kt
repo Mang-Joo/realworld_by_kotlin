@@ -1,7 +1,7 @@
 package com.github.io.mangjoo.realworld.auth.service
 
 import com.github.io.mangjoo.realworld.auth.exception.UserNotFoundException
-import com.github.io.mangjoo.realworld.auth.repository.UserRepository
+import com.github.io.mangjoo.realworld.user.repository.UserRepository
 import com.github.io.mangjoo.realworld.fixture.Fixture
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName

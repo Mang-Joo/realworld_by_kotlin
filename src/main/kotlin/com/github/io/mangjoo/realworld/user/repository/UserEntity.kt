@@ -1,14 +1,10 @@
-package com.github.io.mangjoo.realworld.auth.domain
+package com.github.io.mangjoo.realworld.user.repository
 
 import com.github.io.mangjoo.realworld.auth.common.BaseTimeEntity
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
+import com.github.io.mangjoo.realworld.user.domain.Role
+import com.github.io.mangjoo.realworld.user.domain.Role.*
+import jakarta.persistence.*
 import jakarta.persistence.EnumType.*
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 
@@ -47,6 +43,21 @@ class UserEntity(
         image = image,
         isEnabled = isEnabled,
         role = role
+    )
+
+    constructor(
+        email: String,
+        password: String,
+        username: String
+    ) : this(
+        id = 0,
+        email = email,
+        password = password,
+        username = username,
+        bio = "",
+        image = "",
+        isEnabled = true,
+        role = ROLE_USER
     )
 
     override fun equals(other: Any?): Boolean {

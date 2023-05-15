@@ -1,6 +1,6 @@
 package com.github.io.mangjoo.realworld.auth.handler
 
-import com.github.io.mangjoo.realworld.auth.domain.Role.*
+import com.github.io.mangjoo.realworld.user.domain.Role.*
 import com.github.io.mangjoo.realworld.auth.jwt.JwtCreate
 import com.github.io.mangjoo.realworld.fixture.Fixture
 import org.assertj.core.api.Assertions.*

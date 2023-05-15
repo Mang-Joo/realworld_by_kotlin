@@ -38,7 +38,7 @@ class SecurityConfig(
         .addFilterBefore(addJwtLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter::class.java)
         .authenticationProvider(jwtLoginProvider)
         .authorizeHttpRequests()
-        .requestMatchers("/api/v1/login").permitAll()
+        .requestMatchers("/api/user/login").permitAll()
         .anyRequest()
         .authenticated()
         .and()
@@ -47,7 +47,7 @@ class SecurityConfig(
 
     fun addJwtLoginFilter(authenticationManager: AuthenticationManager): JwtLoginFilter =
         JwtLoginFilter(
-            AntPathRequestMatcher("/api/v1/login", POST.name()),
+            AntPathRequestMatcher("/api/user/login", POST.name()),
             successHandler,
             failureHandler
         )
