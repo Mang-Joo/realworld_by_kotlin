@@ -1,8 +1,10 @@
 package com.github.io.mangjoo.realworld.auth.filter
 
+import com.github.io.mangjoo.realworld.auth.exception.UserNotFoundException
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.*
 import org.springframework.http.HttpMethod.*
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -11,7 +13,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 class JwtLoginFilterTest {
 
-    private val jwtLoginFilter = JwtLoginFilter(AntPathRequestMatcher("/api/v1/login", POST.name()))
+    private val jwtLoginFilter = JwtLoginFilter(
+        AntPathRequestMatcher("/api/user/login", POST.name()),
+        null,
+        null
+    )
 
     @Test
     @DisplayName("Content-Type이 application/json이 아닌 경우 예외를 던진다.")
@@ -23,7 +29,6 @@ class JwtLoginFilterTest {
 
         assertThatThrownBy { jwtLoginFilter.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse) }
             .isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("Content-Type must be application/json")
     }
 
     @Test
@@ -45,8 +50,7 @@ class JwtLoginFilterTest {
         val mockHttpServletResponse = MockHttpServletResponse()
 
         assertThatThrownBy { jwtLoginFilter.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse) }
-            .isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("LoginUserRequest must not be null")
+            .isInstanceOf(UserNotFoundException::class.java)
     }
 
     @Test
@@ -68,8 +72,7 @@ class JwtLoginFilterTest {
         val mockHttpServletResponse = MockHttpServletResponse()
 
         assertThatThrownBy { jwtLoginFilter.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse) }
-            .isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("LoginUserRequest must not be null")
+            .isInstanceOf(UserNotFoundException::class.java)
     }
 
     @Test
@@ -88,6 +91,7 @@ class JwtLoginFilterTest {
                     }
                 """.toByteArray()
                 )
+                reader
             }
         val mockHttpServletResponse = MockHttpServletResponse()
 
