@@ -2,6 +2,7 @@ package com.github.io.mangjoo.realworld.fixture
 
 import com.github.io.mangjoo.realworld.user.domain.Role.ROLE_USER
 import com.github.io.mangjoo.realworld.user.domain.User
+import com.github.io.mangjoo.realworld.user.repository.UserRepository
 
 class Fixture {
     val user = User(1L, "mangjoo@gmail.com", "password", "mangjoo", "bio", "image", true, ROLE_USER)

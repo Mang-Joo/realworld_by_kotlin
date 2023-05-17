@@ -26,13 +26,13 @@ class JwtUserDetailsServiceTest {
     fun `loadUserByUsername`() {
         // given
         val email = "mangjoo@gmail.com"
-        given(userRepository.findByEmail(email)).willReturn(Fixture().userEntity)
+        given(userRepository.findByEmail(email)).willReturn(Fixture().user)
 
         // when
         val user = jwtUserDetailsService.loadUserByUsername(email)
 
         //then
-        assertThat(user).isEqualTo(Fixture().userEntity)
+        assertThat(user).isEqualTo(Fixture().user)
     }
 
     @Test
