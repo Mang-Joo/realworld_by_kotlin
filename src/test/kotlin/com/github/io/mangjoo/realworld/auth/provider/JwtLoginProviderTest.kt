@@ -33,7 +33,7 @@ class JwtLoginProviderTest {
         // given
         val email = "mangjoo@gmail.com"
         val password = "1234"
-        given(jwtUserDetailsService.loadUserByUsername(email)).willReturn(Fixture().userEntity)
+        given(jwtUserDetailsService.loadUserByUsername(email)).willReturn(Fixture().user)
 
         assertThatThrownBy { jwtLoginProvider.authenticate(UsernamePasswordAuthenticationToken(email, password)) }
             .isInstanceOf(PasswordNotMatchException::class.java)
@@ -46,13 +46,13 @@ class JwtLoginProviderTest {
         // given
         val email = "mangjoo@gmail.com"
         val password = "password"
-        given(jwtUserDetailsService.loadUserByUsername(email)).willReturn(Fixture().userEntity)
-        given(passwordEncoder.matches(password, Fixture().userEntity.password)).willReturn(true)
+        given(jwtUserDetailsService.loadUserByUsername(email)).willReturn(Fixture().user)
+        given(passwordEncoder.matches(password, Fixture().user.password)).willReturn(true)
 
         //when
         val authentication = jwtLoginProvider.authenticate(UsernamePasswordAuthenticationToken(email, password))
 
         //then
-        assertThat(authentication.principal).isEqualTo(Fixture().userEntity.id)
+        assertThat(authentication.principal).isEqualTo(Fixture().user.id)
     }
 }

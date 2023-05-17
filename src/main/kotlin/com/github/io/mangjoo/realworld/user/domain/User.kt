@@ -1,7 +1,6 @@
-package com.github.io.mangjoo.realworld.user.repository
+package com.github.io.mangjoo.realworld.user.domain
 
 import com.github.io.mangjoo.realworld.auth.common.BaseTimeEntity
-import com.github.io.mangjoo.realworld.user.domain.Role
 import com.github.io.mangjoo.realworld.user.domain.Role.*
 import jakarta.persistence.*
 import jakarta.persistence.EnumType.*
@@ -12,9 +11,10 @@ import org.hibernate.annotations.Where
 @Table(name = "user_table")
 @SQLDelete(sql = "UPDATE userTable SET is_enabled = false WHERE id = ?")
 @Where(clause = "is_enabled=true")
-class UserEntity(
+class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     var id: Long,
     @Column(unique = true)
     var email: String,
@@ -64,7 +64,7 @@ class UserEntity(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as UserEntity
+        other as User
 
         if (email != other.email) return false
 
