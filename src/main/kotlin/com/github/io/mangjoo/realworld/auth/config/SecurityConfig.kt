@@ -39,6 +39,7 @@ class SecurityConfig(
         .authenticationProvider(jwtLoginProvider)
         .authorizeHttpRequests()
         .requestMatchers("/api/user/login").permitAll()
+        .requestMatchers("/api/user").permitAll()
         .anyRequest()
         .authenticated()
         .and()
