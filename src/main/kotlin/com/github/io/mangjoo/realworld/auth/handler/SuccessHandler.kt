@@ -3,6 +3,7 @@ package com.github.io.mangjoo.realworld.auth.handler
 import com.github.io.mangjoo.realworld.auth.jwt.JwtCreate
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse.SC_OK
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -18,7 +19,7 @@ private val HttpServletResponse?.setSuccessResponseType: HttpServletResponse
         .apply {
             contentType = APPLICATION_JSON_VALUE
             characterEncoding = UTF_8.name()
-            status = 200
+            status = SC_OK
         }
 
 private val Authentication?.convertByPrincipalLongId: Long
