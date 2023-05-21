@@ -2,6 +2,7 @@ package com.github.io.mangjoo.realworld.user.api
 
 import com.github.io.mangjoo.realworld.user.service.UserRegist
 import com.github.io.mangjoo.realworld.user.service.UserRegist.*
+import jakarta.annotation.security.PermitAll
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -17,10 +18,10 @@ class RegistController(
         userRegist.regist(registRequest.toUseCaseRequest())
             .let { ResponseEntity.ok(it) }
 
-    class RegistRequest(
-        private val email: String,
-        private val password: String,
-        private val username: String
+    data class RegistRequest(
+        val email: String,
+        val password: String,
+        val username: String
     ) {
         fun toUseCaseRequest(): RegistUseCaseRequest =
             RegistUseCaseRequest(
