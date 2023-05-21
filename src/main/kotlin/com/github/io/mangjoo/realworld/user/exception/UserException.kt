@@ -1,5 +1,5 @@
 package com.github.io.mangjoo.realworld.user.exception
 
-class UserDuplicationException(
+class UserException(
     override val message: String,
 ) : RuntimeException()
