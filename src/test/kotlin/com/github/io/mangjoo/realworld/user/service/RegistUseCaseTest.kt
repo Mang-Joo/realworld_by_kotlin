@@ -1,7 +1,7 @@
 package com.github.io.mangjoo.realworld.user.service
 
 import com.github.io.mangjoo.realworld.user.domain.User
-import com.github.io.mangjoo.realworld.user.exception.UserDuplicationException
+import com.github.io.mangjoo.realworld.user.exception.UserException
 import com.github.io.mangjoo.realworld.user.repository.UserRepository
 import com.github.io.mangjoo.realworld.user.service.UserRegist.*
 import org.assertj.core.api.Assertions.*
@@ -39,7 +39,7 @@ class RegistUseCaseTest {
         val result = userRegist.regist(registUseCaseRequest)
 
         // Then
-        assertThat(result.id).isEqualTo(user.id)
+        assertThat(result.email).isEqualTo(user.email)
     }
 
     @Test
@@ -48,6 +48,6 @@ class RegistUseCaseTest {
         given(userRepository.checkDuplication("mangjoo@gmail.com")).willReturn(true)
 
         assertThatThrownBy { userRegist.regist(registUseCaseRequest) }
-            .isInstanceOf(UserDuplicationException::class.java)
+            .isInstanceOf(UserException::class.java)
     }
 }
