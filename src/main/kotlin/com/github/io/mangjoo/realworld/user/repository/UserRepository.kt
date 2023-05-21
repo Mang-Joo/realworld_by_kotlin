@@ -12,6 +12,8 @@ interface UserRepository {
 
     fun checkDuplication(email: String): Boolean
 
+    fun findById(id: Long): User
+
     @Component
     @Transactional
     class UserRepositoryImpl(
@@ -22,11 +24,14 @@ interface UserRepository {
                 ?: throw UserNotFoundException("$email not found")
 
         override fun save(user: User): User = userJpaRepository.save(user)
-        override fun checkDuplication(email: String): Boolean  = try {
+        override fun checkDuplication(email: String): Boolean = try {
             findByEmail(email)
             true
         } catch (e: UserNotFoundException) {
             false
         }
+
+        override fun findById(id: Long): User =
+            userJpaRepository.findById(id).orElseThrow { UserNotFoundException("$id not found") }
     }
 }
