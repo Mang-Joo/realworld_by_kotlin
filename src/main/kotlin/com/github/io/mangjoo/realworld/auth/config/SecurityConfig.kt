@@ -31,18 +31,18 @@ class SecurityConfig(
         authenticationManager: AuthenticationManager,
     ): SecurityFilterChain = httpSecurity
         .csrf().disable()
+        .cors().disable()
         .sessionManagement()
         .sessionCreationPolicy(STATELESS)
         .and()
         .formLogin().disable()
-        .addFilterBefore(addJwtLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter::class.java)
         .authenticationProvider(jwtLoginProvider)
-        .authorizeHttpRequests()
-        .requestMatchers("/api/user/login").permitAll()
-        .requestMatchers("/api/user").permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
+        .authorizeHttpRequests {
+            it.requestMatchers("/api/user/login").permitAll()
+                .requestMatchers(POST, "/api/user").permitAll()
+                .anyRequest().authenticated()
+        }
+        .addFilterBefore(addJwtLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter::class.java)
         .oauth2ResourceServer { it.jwt() }
         .build()
 
