@@ -22,6 +22,11 @@ class User(
     var isEnabled: Boolean,
 ) : BaseTimeEntity() {
     val email get(): String = userInfo.email
+    val role get(): Role = userInfo.role
+
+    fun updateUserInfo(userInfo: UserInfo) = apply { this.userInfo = userInfo }
+
+    fun updatePassword(encodePassword: String) = apply { this.password = encodePassword }
 
     constructor(
         email: String,
