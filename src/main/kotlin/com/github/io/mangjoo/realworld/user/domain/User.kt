@@ -1,9 +1,9 @@
 package com.github.io.mangjoo.realworld.user.domain
 
 import com.github.io.mangjoo.realworld.auth.common.BaseTimeEntity
-import com.github.io.mangjoo.realworld.user.domain.Role.*
+import com.github.io.mangjoo.realworld.user.domain.Role.ROLE_USER
+import com.github.io.mangjoo.realworld.user.domain.vo.UserInfo
 import jakarta.persistence.*
-import jakarta.persistence.EnumType.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 
@@ -16,16 +16,13 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     var id: Long,
-    @Column(unique = true)
-    var email: String,
+    @Embedded
+    var userInfo: UserInfo,
     var password: String,
-    var username: String,
-    var bio: String,
-    var image: String,
     var isEnabled: Boolean,
-    @Enumerated(STRING)
-    var role: Role
 ) : BaseTimeEntity() {
+    val email get(): String = userInfo.email
+
     constructor(
         email: String,
         password: String,
@@ -36,13 +33,15 @@ class User(
         role: Role
     ) : this(
         id = 0,
-        email = email,
+        userInfo = UserInfo(
+            email = email,
+            username = username,
+            bio = bio,
+            image = image,
+            role = role
+        ),
         password = password,
-        username = username,
-        bio = bio,
-        image = image,
         isEnabled = isEnabled,
-        role = role
     )
 
     constructor(
@@ -51,13 +50,15 @@ class User(
         username: String
     ) : this(
         id = 0,
-        email = email,
+        userInfo = UserInfo(
+            email = email,
+            username = username,
+            bio = "",
+            image = "",
+            role = ROLE_USER
+        ),
         password = password,
-        username = username,
-        bio = "",
-        image = "",
         isEnabled = true,
-        role = ROLE_USER
     )
 
     override fun equals(other: Any?): Boolean {
@@ -66,13 +67,11 @@ class User(
 
         other as User
 
-        if (email != other.email) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {
-        return email.hashCode()
+        return id.hashCode()
     }
 
 
