@@ -18,7 +18,6 @@ class JwtSupplier(
                 .issuedAt(it)
                 .expiresAt(it.plusSeconds(300))
                 .subject(user.id.toString())
-                .claim("email", user.email)
                 .build();
         }
         .let { JwtEncoderParameters.from(it) }

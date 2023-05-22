@@ -3,7 +3,7 @@ package com.github.io.mangjoo.realworld.user.service
 import com.github.io.mangjoo.realworld.user.domain.User
 import com.github.io.mangjoo.realworld.user.exception.UserException
 import com.github.io.mangjoo.realworld.user.repository.UserRepository
-import com.github.io.mangjoo.realworld.user.service.UserRegist.*
+import com.github.io.mangjoo.realworld.user.service.UserSignUp.*
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -14,15 +14,15 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class RegistUseCaseTest {
+class SignUpUseCaseTest {
 
     @InjectMocks
-    lateinit var userRegist: UserRegistUsecase
+    lateinit var userSignUpUseCase: UserSignUpUseCase
 
     @Mock
     lateinit var userRepository: UserRepository
 
-    private val registUseCaseRequest = RegistUseCaseRequest("mangjoo@gmail.com", "password", "mangjoo")
+    private val signUpUseCaseRequest = SignUpUseCaseRequest("mangjoo@gmail.com", "password", "mangjoo")
 
     @Test
     fun save_WhenUserIsNotExists_ThenSaveUser() {
@@ -36,7 +36,7 @@ class RegistUseCaseTest {
         given(userRepository.save(user)).willReturn(user)
 
         // When
-        val result = userRegist.regist(registUseCaseRequest)
+        val result = userSignUpUseCase.signUp(signUpUseCaseRequest)
 
         // Then
         assertThat(result.email).isEqualTo(user.email)
@@ -47,7 +47,7 @@ class RegistUseCaseTest {
         // Given
         given(userRepository.checkDuplication("mangjoo@gmail.com")).willReturn(true)
 
-        assertThatThrownBy { userRegist.regist(registUseCaseRequest) }
+        assertThatThrownBy { userSignUpUseCase.signUp(signUpUseCaseRequest) }
             .isInstanceOf(UserException::class.java)
     }
 }

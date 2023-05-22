@@ -1,30 +1,29 @@
 package com.github.io.mangjoo.realworld.user.api
 
-import com.github.io.mangjoo.realworld.user.service.UserRegist
-import com.github.io.mangjoo.realworld.user.service.UserRegist.*
-import jakarta.annotation.security.PermitAll
+import com.github.io.mangjoo.realworld.user.service.UserSignUp
+import com.github.io.mangjoo.realworld.user.service.UserSignUp.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class RegistController(
-    private val userRegist: UserRegist
+class SignUpController(
+    private val userSignUp: UserSignUp
 ) {
 
     @PostMapping("/api/user")
-    fun regist(@RequestBody registRequest: RegistRequest) =
-        userRegist.regist(registRequest.toUseCaseRequest())
+    fun signUp(@RequestBody signUpRequest: SignUpRequest) =
+        userSignUp.signUp(signUpRequest.toUseCaseRequest())
             .let { ResponseEntity.ok(it) }
 
-    data class RegistRequest(
+    data class SignUpRequest(
         val email: String,
         val password: String,
         val username: String
     ) {
-        fun toUseCaseRequest(): RegistUseCaseRequest =
-            RegistUseCaseRequest(
+        fun toUseCaseRequest(): SignUpUseCaseRequest =
+            SignUpUseCaseRequest(
                 email = email,
                 password = password,
                 username = username
