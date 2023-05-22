@@ -8,6 +8,7 @@ import org.mockito.Mockito.*
 import org.springframework.http.HttpMethod.*
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
@@ -89,11 +90,15 @@ class JwtLoginFilterTest {
                         "username": "mangjoo",
                         "password": "1234"
                     }
-                """.toByteArray()
+                    """.toByteArray()
                 )
                 reader
             }
         val mockHttpServletResponse = MockHttpServletResponse()
+        val mock = mock(AuthenticationManager::class.java)
+        `when`(mock.authenticate(any(UsernamePasswordAuthenticationToken::class.java)))
+            .thenReturn(UsernamePasswordAuthenticationToken("mangjoo", "1234"))
+        jwtLoginFilter.setAuthenticationManager(mock)
 
         assertThat(jwtLoginFilter.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse))
             .isEqualTo(UsernamePasswordAuthenticationToken("mangjoo", "1234"))
