@@ -1,7 +1,7 @@
 package com.github.io.mangjoo.realworld.user.domain
 
 import com.github.io.mangjoo.realworld.auth.common.BaseTimeEntity
-import com.github.io.mangjoo.realworld.user.domain.Role.ROLE_USER
+import com.github.io.mangjoo.realworld.user.domain.vo.Role
 import com.github.io.mangjoo.realworld.user.domain.vo.UserInfo
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
@@ -15,14 +15,28 @@ class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    var id: Long,
+    var id: Long = 0,
+
     @Embedded
     var userInfo: UserInfo,
+
     var password: String,
-    var isEnabled: Boolean,
+    var isEnabled: Boolean = true,
+
+    @OneToMany(mappedBy = "follower", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    var followers: MutableSet<Follow> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "following", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    var followings: MutableSet<Follow> = mutableSetOf(),
+
 ) : BaseTimeEntity() {
     val email get(): String = userInfo.email
     val role get(): Role = userInfo.role
+    val username get(): String = userInfo.username
+    val bio get(): String = userInfo.bio
+    val image get(): String = userInfo.image
+
+    fun isFollow(following: User): Boolean = followers.any { it.follower == following }
 
     fun updateUserInfo(userInfo: UserInfo) = apply { this.userInfo = userInfo }
 
@@ -58,9 +72,6 @@ class User(
         userInfo = UserInfo(
             email = email,
             username = username,
-            bio = "",
-            image = "",
-            role = ROLE_USER
         ),
         password = password,
         isEnabled = true,

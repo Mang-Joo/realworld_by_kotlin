@@ -1,7 +1,6 @@
 package com.github.io.mangjoo.realworld.user.domain.vo
 
-import com.github.io.mangjoo.realworld.user.domain.Role
-import com.github.io.mangjoo.realworld.user.domain.Role.*
+import com.github.io.mangjoo.realworld.user.domain.vo.Role.*
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EnumType.*
@@ -12,9 +11,10 @@ import jakarta.persistence.Transient
 data class UserInfo(
     @Column(unique = true)
     var email: String,
+    @Column(unique = true)
     var username: String,
-    var bio: String,
-    var image: String,
+    var bio: String = "",
+    var image: String = "",
     @Enumerated(STRING)
     var role: Role = ROLE_USER,
     @Transient
