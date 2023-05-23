@@ -14,6 +14,8 @@ interface UserRepository {
 
     fun findById(id: Long): User
 
+    fun findByName(name: String): User
+
     @Component
     @Transactional
     class UserRepositoryImpl(
@@ -33,5 +35,8 @@ interface UserRepository {
 
         override fun findById(id: Long): User =
             userJpaRepository.findById(id).orElseThrow { UserNotFoundException("$id not found") }
+
+        override fun findByName(name: String): User =
+            userJpaRepository.findByUserInfo_Username(name) ?: throw UserNotFoundException("$name not found")
     }
 }
