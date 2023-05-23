@@ -37,4 +37,14 @@ class UserTest {
         // Then
         assertThat(updateUserPassword.password).isEqualTo(updatePassword)
     }
+
+    @Test
+    fun followTest() {
+        // Given
+        val user = Fixture().user
+        val followUser = Fixture().follower
+
+        // Then
+        assertThat(user.isFollow(followUser)).isEqualTo(true)
+    }
 }
