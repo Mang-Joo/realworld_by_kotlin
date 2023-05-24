@@ -22,7 +22,7 @@ interface UserRepository {
         private val userJpaRepository: UserJpaRepository
     ) : UserRepository {
         override fun findByEmail(email: String): User =
-            userJpaRepository.findByEmail(email)
+            userJpaRepository.findByUserInfo_Email(email)
                 ?: throw UserNotFoundException("$email not found")
 
         override fun save(user: User): User = userJpaRepository.save(user)
