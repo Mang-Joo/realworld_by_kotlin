@@ -15,7 +15,7 @@ class SignUpController(
     @PostMapping("/api/user")
     fun signUp(@RequestBody signUpRequest: SignUpRequest) =
         userSignUp.signUp(signUpRequest.toUseCaseRequest())
-            .let { ResponseEntity.ok(it) }
+            .let { ResponseEntity.ok(UserInfoResponse.from(it)) }
 
     data class SignUpRequest(
         val email: String,
@@ -29,6 +29,7 @@ class SignUpController(
                 username = username
             )
     }
+
 
 
 }
