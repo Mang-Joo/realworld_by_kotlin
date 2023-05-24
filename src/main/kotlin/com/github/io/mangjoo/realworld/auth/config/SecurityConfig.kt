@@ -6,6 +6,7 @@ import com.github.io.mangjoo.realworld.auth.handler.SuccessHandler
 import com.github.io.mangjoo.realworld.auth.provider.JwtLoginProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpMethod.POST
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.ProviderManager
@@ -38,8 +39,9 @@ class SecurityConfig(
         .formLogin().disable()
         .authenticationProvider(jwtLoginProvider)
         .authorizeHttpRequests {
-            it.requestMatchers("/api/user/login").permitAll()
+            it.requestMatchers("/api/user/login", "/swagger-ui/**", "/api-docs/**").permitAll()
                 .requestMatchers(POST, "/api/user").permitAll()
+                .requestMatchers(GET, "/api/profiles/{username}").permitAll()
                 .anyRequest().authenticated()
         }
         .addFilterBefore(addJwtLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter::class.java)
