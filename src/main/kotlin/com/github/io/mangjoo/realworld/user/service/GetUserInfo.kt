@@ -4,13 +4,13 @@ import com.github.io.mangjoo.realworld.user.domain.vo.UserInfo
 import com.github.io.mangjoo.realworld.user.repository.UserRepository
 import org.springframework.stereotype.Service
 
-interface FindUser {
+interface GetUserInfo {
     fun findUser(id: Long): UserInfo
 
     @Service
-    class FindUserUseCaseRequest(
+    class GetUserInfoUseCaseRequest(
         private val userRepository: UserRepository
-    ): FindUser{
+    ): GetUserInfo{
         override fun findUser(id: Long) =
             userRepository.findById(id).userInfo
     }
