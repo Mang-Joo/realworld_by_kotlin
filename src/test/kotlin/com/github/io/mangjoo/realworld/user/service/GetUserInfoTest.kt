@@ -12,10 +12,10 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class FindUserTest {
+class GetUserInfoTest {
 
     @InjectMocks
-    lateinit var findUserUseCase: FindUser.FindUserUseCaseRequest
+    lateinit var getUserInfoUseCase: GetUserInfo.GetUserInfoUseCaseRequest
 
     @Mock
     lateinit var userRepository: UserRepository
@@ -27,7 +27,7 @@ class FindUserTest {
         given(userRepository.findById(user.id)).willReturn(user)
 
         // When
-        val userInfo = findUserUseCase.findUser(1)
+        val userInfo = getUserInfoUseCase.findUser(1)
 
         // Then
         assertThat(userInfo).isEqualTo(user.userInfo)
@@ -38,7 +38,7 @@ class FindUserTest {
         // Given
         given(userRepository.findById(1)).willThrow(UserException::class.java)
 
-        assertThatThrownBy { findUserUseCase.findUser(1) }
+        assertThatThrownBy { getUserInfoUseCase.findUser(1) }
             .isInstanceOf(UserException::class.java)
     }
 }
