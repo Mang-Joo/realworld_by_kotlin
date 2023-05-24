@@ -39,12 +39,17 @@ class UserTest {
     }
 
     @Test
-    fun followTest() {
+    fun isFollowTest() {
         // Given
         val user = Fixture().user
         val followUser = Fixture().follower
 
         // Then
         assertThat(user.isFollow(followUser)).isEqualTo(true)
+    }
+
+    @Test
+    fun followingTest() {
+
     }
 }

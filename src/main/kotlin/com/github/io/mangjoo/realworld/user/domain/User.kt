@@ -36,6 +36,34 @@ class User(
     val bio get(): String = userInfo.bio
     val image get(): String = userInfo.image
 
+    fun follow(following: User) = if (isFollow(following)) {
+        this
+    } else {
+        apply {
+            val follow = Follow(follower = following, following = this)
+            followers.add(follow)
+            addFollowing(following)
+        }
+    }
+
+    private fun addFollowing(follower: User) = apply {
+        val follow = Follow(follower = follower, following = this)
+        followings.add(follow)
+    }
+
+    fun unFollow(following: User) = if (isFollow(following)) {
+        apply {
+            val follow = Follow(follower = this, following = following)
+            followers.remove(follow)
+            following.followings.remove(follow)
+        }
+    } else {
+        this
+    }
+
+
+
+
     fun isFollow(following: User): Boolean = followers.any { it.follower == following }
 
     fun updateUserInfo(userInfo: UserInfo) = apply { this.userInfo = userInfo }
