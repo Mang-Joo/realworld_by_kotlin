@@ -16,7 +16,7 @@ class Follow(
     var follower: User,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "follow_id")
+    @JoinColumn(name = "following_id")
     var following: User
 ) : BaseTimeEntity() {
 
