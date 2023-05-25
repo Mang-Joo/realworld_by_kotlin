@@ -50,6 +50,18 @@ class UserTest {
 
     @Test
     fun followingTest() {
+        // Given
+        val user = Fixture().user
+        val followUser = Fixture().follower2
 
+        // When
+        user.follow(followUser)
+
+        // Then
+        assertThat(user.isFollow(followUser)).isEqualTo(true)
+        assertThat(followUser.followingCount()).isEqualTo(1)
     }
+
+//    @Test
+//    fun u
 }
