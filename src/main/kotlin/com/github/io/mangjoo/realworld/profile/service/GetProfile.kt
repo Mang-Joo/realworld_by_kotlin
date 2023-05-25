@@ -27,7 +27,7 @@ interface GetProfile {
                     it.username,
                     it.bio,
                     it.image,
-                    it.isFollow(userRepository.findById(followerId))
+                    it.isFollowing(userRepository.findById(followerId))
                 )
             }
 
