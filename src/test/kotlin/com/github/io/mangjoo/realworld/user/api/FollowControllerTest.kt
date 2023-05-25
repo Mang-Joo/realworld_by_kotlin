@@ -2,6 +2,7 @@ package com.github.io.mangjoo.realworld.user.api
 
 import com.github.io.mangjoo.realworld.fixture.signUpUser
 import com.github.io.mangjoo.realworld.user.api.SignUpController.SignUpRequest
+import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -15,6 +16,7 @@ class FollowControllerTest(
     @Autowired private val mockMvc: MockMvc
 ) {
     @Test
+    @Transactional
     fun `followAPITest`() {
         val to = mockMvc.signUpUser()
         val from = mockMvc.signUpUser(SignUpRequest("test@gmail.com", "test", "test"))

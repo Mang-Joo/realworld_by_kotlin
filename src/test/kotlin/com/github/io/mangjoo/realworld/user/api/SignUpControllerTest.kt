@@ -18,6 +18,7 @@ class SignUpControllerTest @Autowired constructor(
 ) {
 
     @Test
+    @Transactional
     fun `signUpAPITest`() {
         val user = Fixture().user
         mockMvc.post("/api/user") {

@@ -19,6 +19,7 @@ class GetUserInfoControllerTest(
 ) {
 
     @Test
+    @Transactional
     fun `getUserInfoAPITest`() {
         val singUpUser = mockMvc.signUpUser()
 

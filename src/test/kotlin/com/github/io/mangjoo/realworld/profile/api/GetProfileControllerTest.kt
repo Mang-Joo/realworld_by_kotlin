@@ -18,6 +18,7 @@ class GetProfileControllerTest(
     @Autowired private val mockMvc: MockMvc,
 ) {
     @Test
+    @Transactional
     fun `getProfileAPITest`() {
 
         val singUpUser = mockMvc.signUpUser()
