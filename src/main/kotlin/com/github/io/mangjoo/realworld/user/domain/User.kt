@@ -24,47 +24,50 @@ class User(
     var isEnabled: Boolean = true,
 
     @OneToMany(mappedBy = "from", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    var followers: MutableSet<Follow> = mutableSetOf(),
+    val followers: MutableSet<Follow> = mutableSetOf(),
 
     @OneToMany(mappedBy = "to", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    var followings: MutableSet<Follow> = mutableSetOf(),
+    val followings: MutableSet<Follow> = mutableSetOf(),
 
-) : BaseTimeEntity() {
+    ) : BaseTimeEntity() {
     val email get(): String = userInfo.email
     val role get(): Role = userInfo.role
     val username get(): String = userInfo.username
     val bio get(): String = userInfo.bio
     val image get(): String = userInfo.image
 
-    fun follow(from: User) = if (isFollow(from)) {
+    fun follow(to: User) = if (this.isFollowing(to)) {
         this
     } else {
         apply {
-            val follow = Follow(from = from, to = this)
-            followers.add(follow)
-            addFollowing(from)
+            val follow = Follow(from = this, to = to)
+            followings.add(follow)
+            addFoolower(to, follow)
         }
     }
 
-    private fun addFollowing(from: User) = apply {
-        val follow = Follow(from = this, to = from)
-        from.followings.add(follow)
+    private fun addFoolower(to: User, follow: Follow) = apply {
+        to.followers.add(follow)
     }
 
-    fun unFollow(following: User) = if (isFollow(following)) {
+    fun unFollow(to: User) = if (to.isFollowing(this)) {
         apply {
-            val follow = Follow(from = this, to = following)
-            followers.remove(follow)
-            following.followings.remove(follow)
+            val follow = Follow(from = this, to = to)
+            followings.remove(follow)
+            removeFollower(follow, to)
         }
     } else {
         this
+    }
+
+    private fun removeFollower(following: Follow, to: User) = apply {
+        to.followers.remove(following)
     }
 
     fun followerCount(): Int = followers.size
     fun followingCount(): Int = followings.size
 
-    fun isFollow(following: User): Boolean = followers.any { it.from == following }
+    fun isFollowing(to: User): Boolean = followings.any { it.to == to }
 
     fun updateUserInfo(userInfo: UserInfo) = apply { this.userInfo = userInfo }
 

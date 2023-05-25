@@ -20,4 +20,19 @@ class Follow(
     var to: User
 ) : BaseTimeEntity() {
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Follow
+
+        if (from != other.from) return false
+        return to == other.to
+    }
+
+    override fun hashCode(): Int {
+        var result = from.hashCode()
+        result = 31 * result + to.hashCode()
+        return result
+    }
 }
