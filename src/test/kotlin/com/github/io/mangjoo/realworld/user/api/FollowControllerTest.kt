@@ -26,6 +26,7 @@ class FollowControllerTest(
         }
             .andExpect {
                 status { isOk() }
+                jsonPath("$.username") { value(to.userName) }
                 jsonPath("$.following") { value(true) }
             }
     }
