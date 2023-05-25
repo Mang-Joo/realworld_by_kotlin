@@ -13,9 +13,11 @@ interface FollowUseCase {
     class FollowUseCaseImpl(
         private val userRepository: UserRepository
     ) : FollowUseCase {
-        override fun follow(to: String, from: Long): Profile =
-            userRepository.findByName(to)
-                .let { it.follow(userRepository.findById(from)) }
-                .let { Profile(username = it.username, bio = it.bio, image = it.image, following = true) }
+        override fun follow(to: String, from: Long): Profile {
+            val following = userRepository.findByName(to)
+            return userRepository.findById(from)
+                .follow(following)
+                .let { Profile(username = following.username, bio = following.bio, image = following.image, following = true) }
+        }
     }
 }
