@@ -1,6 +1,6 @@
 package com.github.io.mangjoo.realworld.profile.api
 
-import com.github.io.mangjoo.realworld.fixture.singUpUser
+import com.github.io.mangjoo.realworld.fixture.signUpUser
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +20,7 @@ class GetProfileControllerTest(
     @Test
     fun `getProfileAPITest`() {
 
-        val singUpUser = mockMvc.singUpUser()
+        val singUpUser = mockMvc.signUpUser()
 
         mockMvc.get("/api/profiles/${singUpUser.userName}") {
             contentType = APPLICATION_JSON
