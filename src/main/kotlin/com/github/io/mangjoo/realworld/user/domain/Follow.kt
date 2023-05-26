@@ -1,23 +1,12 @@
 package com.github.io.mangjoo.realworld.user.domain
 
 import com.github.io.mangjoo.realworld.auth.common.BaseTimeEntity
-import jakarta.persistence.*
+import jakarta.persistence.Embeddable
 
-@Entity
-@Table(name = "follow")
+@Embeddable
 class Follow(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "follow_id")
-    var id: Long = 0,
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "follower_id")
-    var from: User,
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "following_id")
-    var to: User
+    var fromUser: Long,
+    var toUser: Long
 ) : BaseTimeEntity() {
 
     override fun equals(other: Any?): Boolean {
@@ -26,13 +15,13 @@ class Follow(
 
         other as Follow
 
-        if (from != other.from) return false
-        return to == other.to
+        if (fromUser != other.fromUser) return false
+        return toUser == other.toUser
     }
 
     override fun hashCode(): Int {
-        var result = from.hashCode()
-        result = 31 * result + to.hashCode()
+        var result = fromUser.hashCode()
+        result = 31 * result + toUser.hashCode()
         return result
     }
 }

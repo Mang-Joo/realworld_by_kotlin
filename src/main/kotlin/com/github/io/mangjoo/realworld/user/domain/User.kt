@@ -16,20 +16,19 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     var id: Long = 0,
-
     @Embedded
     var userInfo: UserInfo,
-
     var password: String,
     var isEnabled: Boolean = true,
 
-    @OneToMany(mappedBy = "from", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_followers", joinColumns = [JoinColumn(name = "user_id")])
     val followers: MutableSet<Follow> = mutableSetOf(),
 
-    @OneToMany(mappedBy = "to", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_followings", joinColumns = [JoinColumn(name = "user_id")])
     val followings: MutableSet<Follow> = mutableSetOf(),
-
-    ) : BaseTimeEntity() {
+) : BaseTimeEntity() {
     val email get(): String = userInfo.email
     val role get(): Role = userInfo.role
     val username get(): String = userInfo.username
@@ -40,19 +39,19 @@ class User(
         this
     } else {
         apply {
-            val follow = Follow(from = this, to = to)
+            val follow = Follow(fromUser = this.id, toUser = to.id)
             followings.add(follow)
-            addFoolower(to, follow)
+            addFollower(to, follow)
         }
     }
 
-    private fun addFoolower(to: User, follow: Follow) = apply {
+    private fun addFollower(to: User, follow: Follow) = apply {
         to.followers.add(follow)
     }
 
     fun unFollow(to: User) = if (to.isFollowing(this)) {
         apply {
-            val follow = Follow(from = this, to = to)
+            val follow = Follow(fromUser = this.id, toUser = to.id)
             followings.remove(follow)
             removeFollower(follow, to)
         }
@@ -67,7 +66,7 @@ class User(
     fun followerCount(): Int = followers.size
     fun followingCount(): Int = followings.size
 
-    fun isFollowing(to: User): Boolean = followings.any { it.to == to }
+    fun isFollowing(to: User): Boolean = followings.any { it.toUser == to.id }
 
     fun updateUserInfo(userInfo: UserInfo) = apply { this.userInfo = userInfo }
 
