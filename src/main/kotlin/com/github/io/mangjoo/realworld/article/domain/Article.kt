@@ -17,7 +17,7 @@ class Article(
     val body: String,
     @Embedded
     val tags: Tags = Tags(),
-    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @ManyToOne(fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "author_id")
     val author: User,

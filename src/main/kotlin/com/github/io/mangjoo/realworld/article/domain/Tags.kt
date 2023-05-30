@@ -1,12 +1,13 @@
 package com.github.io.mangjoo.realworld.article.domain
 
-import jakarta.persistence.ElementCollection
-import jakarta.persistence.Embeddable
+import jakarta.persistence.*
 
 
 @Embeddable
 data class Tags(
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "article_tag")
+    @Column(name = "tag")
     val group: MutableSet<String> = mutableSetOf()
 ) {
     fun addTag(tag: String) = group.add(tag)
