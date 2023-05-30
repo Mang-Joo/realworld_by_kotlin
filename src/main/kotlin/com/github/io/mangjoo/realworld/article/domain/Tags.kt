@@ -7,10 +7,10 @@ import jakarta.persistence.Embeddable
 @Embeddable
 data class Tags(
     @ElementCollection
-    val tags: MutableList<String> = mutableListOf()
+    val group: MutableSet<String> = mutableSetOf()
 ) {
-    fun addTag(tag: String) = tags.add(tag)
-    fun addTags(tags: List<String>) = this.tags.addAll(tags)
-    fun removeTag(tag: String) = tags.remove(tag)
-    fun hasTag(tag: String) = tags.contains(tag)
+    fun addTag(tag: String) = group.add(tag)
+    fun addTags(tags: List<String>) = this.group.addAll(tags)
+    fun removeTag(tag: String) = group.remove(tag)
+    fun hasTag(tag: String) = group.contains(tag)
 }
