@@ -7,7 +7,7 @@ import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 
 @Entity
-@Table(name = "article")
+@Table(name = "article_table")
 class Article(
     @Id
     @Column(name = "article_id")
@@ -20,7 +20,27 @@ class Article(
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "author_id")
-    val user: User
+    val author: User,
+    @ElementCollection(fetch = FetchType.EAGER)
+    val favorited: MutableSet<String> = mutableSetOf(),
 ) : BaseTimeEntity() {
+    constructor(
+        title: String,
+        description: String,
+        body: String,
+        tags: MutableSet<String>,
+        author: User
+    ) : this(
+        title = title,
+        description = description,
+        body = body,
+        tags = Tags(tags),
+        author = author,
+    )
+
+    override fun toString(): String {
+        return "Article(id=$id, title='$title', description='$description', body='$body', tags=$tags, author='$author', favorited=$favorited)"
+    }
+
 
 }
