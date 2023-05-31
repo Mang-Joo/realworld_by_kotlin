@@ -1,7 +1,6 @@
 package com.github.io.mangjoo.realworld.article.repository
 
 import com.github.io.mangjoo.realworld.article.domain.Article
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 
@@ -14,7 +13,7 @@ interface ArticleRepository {
     @Component
     class ArticleRepositoryImpl(
         private val articleJpaRepository: ArticleJpaRepository
-    ): ArticleRepository {
+    ) : ArticleRepository {
         override fun save(article: Article): Article =
             articleJpaRepository.save(article)
 

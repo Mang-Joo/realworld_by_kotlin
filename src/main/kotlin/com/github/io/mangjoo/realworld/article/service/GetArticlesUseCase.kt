@@ -1,7 +1,6 @@
 package com.github.io.mangjoo.realworld.article.service
 
 import com.github.io.mangjoo.realworld.article.api.request.FilterByArticles
-import com.github.io.mangjoo.realworld.article.api.request.PageRequest
 import com.github.io.mangjoo.realworld.article.api.response.ArticleResponse
 import com.github.io.mangjoo.realworld.article.api.response.GetArticlesResponse
 import com.github.io.mangjoo.realworld.article.repository.ArticleRepository
