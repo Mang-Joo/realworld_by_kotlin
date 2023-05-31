@@ -1,18 +1,19 @@
 package com.github.io.mangjoo.realworld.article.service
 
 import com.github.io.mangjoo.realworld.article.api.request.FilterByArticles
+import com.github.io.mangjoo.realworld.article.api.request.PageRequest
 import com.github.io.mangjoo.realworld.article.api.response.ArticleResponse
 import com.github.io.mangjoo.realworld.article.api.response.GetArticlesResponse
 import com.github.io.mangjoo.realworld.article.repository.ArticleRepository
 import com.github.io.mangjoo.realworld.user.repository.UserRepository
-import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 interface GetArticlesUseCase {
     fun getArticles(
         filterByArticles: FilterByArticles,
-        pageRequest: PageRequest,
+        pageRequest: Pageable,
         userId: Long?
     ): GetArticlesResponse
 
@@ -25,7 +26,7 @@ interface GetArticlesUseCase {
         @Transactional(readOnly = true)
         override fun getArticles(
             filterByArticles: FilterByArticles,
-            pageRequest: PageRequest,
+            pageRequest: Pageable,
             userId: Long?
         ): GetArticlesResponse {
             val articles = articleRepository.findAll(
@@ -39,11 +40,6 @@ interface GetArticlesUseCase {
                 val user = userRepository.findById(id)
                 GetArticlesResponse(articles.map { ArticleResponse.of(it, user) }, articles.size)
             } ?: return GetArticlesResponse(articles.map { ArticleResponse.of(it, null) }, articles.size)
-
-
-
-
-            return GetArticlesResponse(mutableListOf(), 0)
         }
     }
 }
