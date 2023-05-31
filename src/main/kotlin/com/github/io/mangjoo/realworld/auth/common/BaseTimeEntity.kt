@@ -18,5 +18,5 @@ open class BaseTimeEntity {
 
     @Column(name = "modified_date")
     @LastModifiedDate
-    val modifiedDate: LocalDateTime? = null
+    val modifiedDate: LocalDateTime = now()
 }
