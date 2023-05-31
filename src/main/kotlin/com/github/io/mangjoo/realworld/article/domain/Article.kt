@@ -39,12 +39,10 @@ class Article(
     )
 
     fun tags(): MutableSet<String> = tags.group
-
     fun hasFavorite(): Boolean = favorited.isNotEmpty()
-
     fun isFavorite(username: String): Boolean = favorited.contains(username)
-
     fun favoriteCount(): Int = favorited.size
+    fun addFavorite(username: String) = favorited.add(username)
 
     override fun toString(): String {
         return "Article(id=$id, title='$title', description='$description', body='$body', tags=$tags, author='$author', favorited=$favorited)"
