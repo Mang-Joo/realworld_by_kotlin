@@ -1,6 +1,7 @@
 package com.github.io.mangjoo.realworld.fixture
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.github.io.mangjoo.realworld.article.domain.Article
 import com.github.io.mangjoo.realworld.user.api.SignUpController.SignUpRequest
 import com.github.io.mangjoo.realworld.user.api.UserInfoResponse
 import com.github.io.mangjoo.realworld.user.domain.User
@@ -24,6 +25,14 @@ class Fixture {
 
     val follower2 = User("followe22r@gmail.com", "password22", "follower22")
         .apply { id = 3 }
+
+    val article = Article(
+        "title",
+        "description",
+        "body",
+        mutableSetOf("tag1", "tag2"),
+        user
+    )
 
     val userToken: String =
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlJPTEVfVVNFUiJ9.n_Voazt4-FHnoVxrvnCSIDCepqK8cd-vEQYZLbsZ2Hc"
