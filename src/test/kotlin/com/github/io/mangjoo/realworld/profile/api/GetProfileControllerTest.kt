@@ -19,7 +19,7 @@ class GetProfileControllerTest(
 ) {
     @Test
     @Transactional
-    fun `getProfileAPITest`() {
+    fun getProfileAPITest() {
 
         val singUpUser = mockMvc.signUpUser()
 
