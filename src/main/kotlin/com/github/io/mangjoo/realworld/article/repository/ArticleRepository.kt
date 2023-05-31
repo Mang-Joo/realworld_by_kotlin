@@ -1,13 +1,16 @@
 package com.github.io.mangjoo.realworld.article.repository
 
 import com.github.io.mangjoo.realworld.article.domain.Article
+import org.springframework.data.domain.PageRequest
+import org.springframework.stereotype.Component
 
 interface ArticleRepository {
 
     fun save(article: Article): Article
     fun findById(id: Long): Article
-    fun findAll(tag: String?, author: String?, favorited: String?): Collection<Article>
+    fun findAll(tag: String?, author: String?, favorited: String?, pageRequest: PageRequest): Collection<Article>
 
+    @Component
     class ArticleRepositoryImpl(
         private val articleJpaRepository: ArticleJpaRepository
     ): ArticleRepository {
@@ -18,8 +21,12 @@ interface ArticleRepository {
             articleJpaRepository.findById(id)
                 .orElseThrow { IllegalArgumentException("Article not found") }
 
-        override fun findAll(tag: String?, author: String?, favorited: String?): Collection<Article> {
-            TODO()
-        }
+        override fun findAll(tag: String?, author: String?, favorited: String?, pageRequest: PageRequest): Collection<Article> =
+            articleJpaRepository.findAll(
+                author = author,
+                tag = tag,
+                favorited = favorited,
+                pageable = pageRequest
+            )
     }
 }

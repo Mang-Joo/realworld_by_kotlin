@@ -3,14 +3,13 @@ package com.github.io.mangjoo.realworld.article.repository
 import com.github.io.mangjoo.realworld.article.domain.Article
 import com.github.io.mangjoo.realworld.fixture.Fixture
 import com.github.io.mangjoo.realworld.user.repository.UserJpaRepository
-import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.domain.PageRequest
 
 @DataJpaTest
-@Transactional
+//@Transactional
 class ArticleJpaRepositoryTest(
     @Autowired private val articleJpaRepository: ArticleJpaRepository,
     @Autowired private val userRepository: UserJpaRepository
@@ -28,7 +27,7 @@ class ArticleJpaRepositoryTest(
         )
         articleJpaRepository.save(article)
         val articles: Collection<Article> =
-            articleJpaRepository.findAllH(
+            articleJpaRepository.findAll(
                 tag = "tag1",
                 author = Fixture().user.username,
                 favorited = null,

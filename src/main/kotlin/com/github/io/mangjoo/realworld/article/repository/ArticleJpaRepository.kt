@@ -19,9 +19,10 @@ interface ArticleJpaRepository : JpaRepository<Article, Long> {
         WHERE (:author IS NULL OR article.author.userInfo.username in (:author))
         AND (:tag IS NULL OR tags in (:tag))
         AND (:favorited IS NULL OR favorited in (:favorited))
-    """
+        ORDER BY article.createdDate DESC
+     """
     )
-    fun findAllH(
+    fun findAll(
         @Param("author") author: String?,
         @Param("tag") tag: String?,
         @Param("favorited") favorited: String?,
