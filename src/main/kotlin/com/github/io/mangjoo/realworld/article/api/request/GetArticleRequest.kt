@@ -5,4 +5,5 @@ data class GetArticleRequest(
     val author: String?,
     val favorited: String?,
 ) {
+    fun toFilterByArticles(): FilterByArticles = FilterByArticles(tag, author, favorited)
 }
