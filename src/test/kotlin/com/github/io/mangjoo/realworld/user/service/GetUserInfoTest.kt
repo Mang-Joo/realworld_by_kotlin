@@ -27,7 +27,7 @@ class GetUserInfoTest {
         given(userRepository.findById(user.id)).willReturn(user)
 
         // When
-        val userInfo = getUserInfoUseCase.findUser(1)
+        val userInfo = getUserInfoUseCase.findUser(0L)
 
         // Then
         assertThat(userInfo).isEqualTo(user.userInfo)

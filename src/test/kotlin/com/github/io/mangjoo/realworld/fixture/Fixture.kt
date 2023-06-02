@@ -14,17 +14,17 @@ class Fixture {
 
     val user = User("mangjoo@gmail.com", "password", "mangjoo", "bio", "image", true, ROLE_USER)
         .apply {
-            id = 1
+//            id = 1
         }
 
     val follower = User("follower@gmail.com", "password", "follower")
         .apply {
-            id = 2
+//            id = 2
             this.follow(user)
         }
 
     val follower2 = User("followe22r@gmail.com", "password22", "follower22")
-        .apply { id = 3 }
+//        .apply { id = 3 }
 
     val article = Article(
         "title",
