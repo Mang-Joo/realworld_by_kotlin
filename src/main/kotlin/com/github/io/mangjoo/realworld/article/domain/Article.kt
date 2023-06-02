@@ -11,6 +11,7 @@ import org.hibernate.annotations.FetchMode
 class Article(
     @Id
     @Column(name = "article_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val title: String,
     val description: String,
@@ -22,6 +23,7 @@ class Article(
     @JoinColumn(name = "author_id")
     val author: User,
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "article_favorited", joinColumns = [JoinColumn(name = "article_id")])
     val favorited: MutableSet<String> = mutableSetOf(),
 ) : BaseTimeEntity() {
     constructor(
