@@ -6,7 +6,7 @@ import jakarta.persistence.*
 @Embeddable
 data class Tags(
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "article_tag")
+    @CollectionTable(name = "article_tag", joinColumns = [JoinColumn(name = "article_id")])
     @Column(name = "tag")
     val group: MutableSet<String> = mutableSetOf()
 ) {
