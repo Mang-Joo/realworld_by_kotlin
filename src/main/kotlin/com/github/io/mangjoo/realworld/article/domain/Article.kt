@@ -13,6 +13,7 @@ class Article(
     @Column(name = "article_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    val slug: String,
     val title: String,
     val description: String,
     val body: String,
@@ -27,12 +28,14 @@ class Article(
     val favorited: MutableSet<String> = mutableSetOf(),
 ) : BaseTimeEntity() {
     constructor(
+        slug: String,
         title: String,
         description: String,
         body: String,
         tags: MutableSet<String>,
         author: User
     ) : this(
+        slug = slug,
         title = title,
         description = description,
         body = body,

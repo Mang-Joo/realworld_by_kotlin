@@ -6,57 +6,35 @@ import org.junit.jupiter.api.Test
 
 class ArticleTest {
 
+    private val article = Article(
+        slug = "test",
+        title = "test",
+        description = "test",
+        body = "test",
+        tags = mutableSetOf("test1", "test2"),
+        author = Fixture().user
+    )
+
     @Test
     fun getTagList() {
         val tags = mutableSetOf("test1", "test2")
-        val article = Article(
-            title = "test",
-            description = "test",
-            body = "test",
-            tags = tags,
-            Fixture().user
-        )
 
         assertThat(article.tags()).isEqualTo(tags)
     }
 
     @Test
     fun hasFavorite() {
-        val article = Article(
-            title = "test",
-            description = "test",
-            body = "test",
-            tags = mutableSetOf("test1", "test2"),
-            author = Fixture().user
-        )
-
         assertThat(article.hasFavorite()).isFalse()
     }
 
     @Test
     fun addFavorite() {
-        val article = Article(
-            title = "test",
-            description = "test",
-            body = "test",
-            tags = mutableSetOf("test1", "test2"),
-            author = Fixture().user
-        )
-
         article.addFavorite("username")
         assertThat(article.favoriteCount()).isEqualTo(1)
     }
 
     @Test
     fun isFavorite() {
-        val article = Article(
-            title = "test",
-            description = "test",
-            body = "test",
-            tags = mutableSetOf("test1", "test2"),
-            author = Fixture().user
-        )
-
         val username = "username"
         article.addFavorite(username)
 

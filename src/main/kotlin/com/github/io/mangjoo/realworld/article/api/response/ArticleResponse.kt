@@ -1,9 +1,11 @@
 package com.github.io.mangjoo.realworld.article.api.response
 
+import com.fasterxml.jackson.annotation.JsonRootName
 import com.github.io.mangjoo.realworld.article.domain.Article
 import com.github.io.mangjoo.realworld.user.domain.User
 import java.time.LocalDateTime
 
+@JsonRootName("article")
 data class ArticleResponse(
         val slug: String,
         val title: String,
@@ -19,7 +21,7 @@ data class ArticleResponse(
     companion object {
         fun of(article: Article, user: User?): ArticleResponse {
             return ArticleResponse(
-                    slug = article.id.toString(),
+                    slug = article.slug,
                     title = article.title,
                     description = article.description,
                     body = article.body,

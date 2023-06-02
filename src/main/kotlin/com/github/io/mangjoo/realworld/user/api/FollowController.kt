@@ -1,8 +1,8 @@
 package com.github.io.mangjoo.realworld.user.api
 
+import com.github.io.mangjoo.realworld.auth.jwt.JwtDecode
 import com.github.io.mangjoo.realworld.user.service.FollowUseCase
 import org.springframework.http.ResponseEntity
-import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class FollowController(
     private val followUseCase: FollowUseCase,
-    private val jwtDecoder: JwtDecoder
+    private val jwtDecode: JwtDecode
 ) {
 
     @PostMapping("/api/profiles/{username}/follow")
@@ -19,7 +19,7 @@ class FollowController(
         @PathVariable username: String,
         @RequestHeader("Authorization") token: String
     ) =
-        jwtDecoder.decode(token.removePrefix("Bearer ")).subject.toLong()
+        jwtDecode.tokenToUserId(token)!!
             .let {
                 ResponseEntity.ok(followUseCase.follow(username, it))
             }

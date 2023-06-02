@@ -28,6 +28,7 @@ class Fixture {
 
     val article = Article(
         "title",
+        "title",
         "description",
         "body",
         mutableSetOf("tag1", "tag2"),

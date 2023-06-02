@@ -7,11 +7,12 @@ create table article_table
 (
     article_id    bigint not null auto_increment,
     author_id     bigint,
+    slug          varchar(255) unique not null,
+    title         varchar(255),
+    description   varchar(255),
+    body          varchar(255),
     created_date  datetime(6),
     modified_date datetime(6),
-    body          varchar(255),
-    description   varchar(255),
-    title         varchar(255),
     primary key (article_id)
 ) engine = InnoDB;
 create table article_tag
@@ -30,16 +31,16 @@ create table user_follow
 ) engine = InnoDB;
 create table user_table
 (
-    is_enabled    bit    not null,
+    user_id       bigint not null auto_increment,
+    username      varchar(255),
+    email         varchar(255),
+    password      varchar(255),
+    bio           varchar(255),
+    image         varchar(255),
     created_date  datetime(6),
     modified_date datetime(6),
-    user_id       bigint not null auto_increment,
-    bio           varchar(255),
-    email         varchar(255),
-    image         varchar(255),
-    password      varchar(255),
     role          enum ('ROLE_ADMIN','ROLE_USER'),
-    username      varchar(255),
+    is_enabled    bit    not null,
     primary key (user_id)
 ) engine = InnoDB;
 alter table user_table

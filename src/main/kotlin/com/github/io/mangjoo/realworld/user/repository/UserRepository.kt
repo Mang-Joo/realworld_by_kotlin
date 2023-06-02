@@ -7,14 +7,11 @@ import org.springframework.transaction.annotation.Transactional
 
 interface UserRepository {
     fun findByEmail(email: String): User
-
     fun save(user: User): User
-
     fun checkDuplication(email: String): Boolean
-
     fun findById(id: Long): User
-
     fun findByName(name: String): User
+    fun findAll(users: List<Long>): List<User>
 
     @Component
     @Transactional
@@ -38,5 +35,6 @@ interface UserRepository {
 
         override fun findByName(name: String): User =
             userJpaRepository.findByUserInfo_Username(name) ?: throw UserNotFoundException("$name not found")
+        override fun findAll(users: List<Long>): List<User> = userJpaRepository.findAllById(users)
     }
 }

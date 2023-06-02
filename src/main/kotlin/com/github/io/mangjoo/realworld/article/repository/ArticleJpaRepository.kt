@@ -1,6 +1,7 @@
 package com.github.io.mangjoo.realworld.article.repository
 
 import com.github.io.mangjoo.realworld.article.domain.Article
+import com.github.io.mangjoo.realworld.user.domain.User
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -29,4 +30,11 @@ interface ArticleJpaRepository : JpaRepository<Article, Long> {
         @Param("favorited") favorited: String?,
         pageable: Pageable
     ): List<Article>
+
+    fun findByAuthorIn(
+        authors: Collection<User>,
+        pageable: Pageable
+    ): List<Article>
+
+    fun findBySlug(slug: String): Article?
 }
