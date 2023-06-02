@@ -9,7 +9,7 @@ import org.hibernate.annotations.Where
 
 @Entity
 @Table(name = "user_table")
-@SQLDelete(sql = "UPDATE userTable SET is_enabled = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE user_table SET is_enabled = false WHERE id = ?")
 @Where(clause = "is_enabled=true")
 class User(
     @Id
@@ -21,12 +21,12 @@ class User(
     var password: String,
     var isEnabled: Boolean = true,
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "user_followers", joinColumns = [JoinColumn(name = "user_id")])
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_user")
     val followers: MutableSet<Follow> = mutableSetOf(),
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "user_followings", joinColumns = [JoinColumn(name = "user_id")])
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_user")
     val followings: MutableSet<Follow> = mutableSetOf(),
 ) : BaseTimeEntity() {
     val email get(): String = userInfo.email
