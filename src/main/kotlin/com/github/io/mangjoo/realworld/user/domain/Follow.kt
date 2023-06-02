@@ -1,11 +1,18 @@
 package com.github.io.mangjoo.realworld.user.domain
 
 import com.github.io.mangjoo.realworld.auth.common.BaseTimeEntity
-import jakarta.persistence.Embeddable
+import jakarta.persistence.*
 
-@Embeddable
+@Entity
+@Table(name = "user_follow")
 class Follow(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "follow_id")
+    val id: Long = 0,
+    @Column(name = "from_user")
     var fromUser: Long,
+    @Column(name = "to_user")
     var toUser: Long
 ) : BaseTimeEntity() {
 
