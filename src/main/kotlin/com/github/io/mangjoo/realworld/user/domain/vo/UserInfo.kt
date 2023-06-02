@@ -16,6 +16,7 @@ data class UserInfo(
     var bio: String = "",
     var image: String = "",
     @Enumerated(STRING)
+    @Column(name = "role", columnDefinition = "ENUM('ROLE_USER','ROLE_ADMIN')")
     var role: Role = ROLE_USER,
     @Transient
     var token: String? = null
