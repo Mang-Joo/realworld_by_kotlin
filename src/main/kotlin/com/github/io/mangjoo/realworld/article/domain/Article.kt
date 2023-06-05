@@ -28,14 +28,13 @@ class Article(
     val favorited: MutableSet<String> = mutableSetOf(),
 ) : BaseTimeEntity() {
     constructor(
-        slug: String,
         title: String,
         description: String,
         body: String,
         tags: MutableSet<String>,
         author: User
     ) : this(
-        slug = slug,
+        slug = title.replace(" ", "-"),
         title = title,
         description = description,
         body = body,
@@ -51,6 +50,30 @@ class Article(
 
     override fun toString(): String {
         return "Article(id=$id, title='$title', description='$description', body='$body', tags=$tags, author='$author', favorited=$favorited)"
+    }
+
+    fun update(title: String, body: String, description: String) = Article(
+        id = this.id,
+        slug = title.replace(" ", "-"),
+        title = title,
+        description = description,
+        body = body,
+        tags = this.tags,
+        author = this.author,
+        favorited = this.favorited
+    )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Article
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
     }
 
 

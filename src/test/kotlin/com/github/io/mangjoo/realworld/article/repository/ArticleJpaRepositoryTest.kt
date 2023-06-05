@@ -30,7 +30,6 @@ class ArticleJpaRepositoryTest(
         val save = userRepository.save(user)
 
         val article = Article(
-            slug = "slug",
             title = "title",
             description = "description",
             body = "body",

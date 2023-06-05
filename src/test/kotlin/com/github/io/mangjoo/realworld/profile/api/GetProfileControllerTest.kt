@@ -28,10 +28,10 @@ class GetProfileControllerTest(
         }
             .andExpect {
                 status { isOk() }
-                jsonPath("$.username") { value(singUpUser.userName) }
-                jsonPath("$.bio") { value(singUpUser.bio) }
-                jsonPath("$.image") { value(singUpUser.image) }
-                jsonPath("$.following") { value(false) }
+                jsonPath("$.profile.username") { value(singUpUser.userName) }
+                jsonPath("$.profile.bio") { value(singUpUser.bio) }
+                jsonPath("$.profile.image") { value(singUpUser.image) }
+                jsonPath("$.profile.following") { value(false) }
             }
     }
 

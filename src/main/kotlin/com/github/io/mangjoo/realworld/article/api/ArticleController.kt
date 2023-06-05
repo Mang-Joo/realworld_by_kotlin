@@ -3,11 +3,9 @@ package com.github.io.mangjoo.realworld.article.api
 import com.github.io.mangjoo.realworld.article.api.request.CreateArticleRequest
 import com.github.io.mangjoo.realworld.article.api.request.GetArticleRequest
 import com.github.io.mangjoo.realworld.article.api.request.PageRequest
+import com.github.io.mangjoo.realworld.article.api.request.UpdateArticleRequest
 import com.github.io.mangjoo.realworld.article.api.response.GetArticlesResponse
-import com.github.io.mangjoo.realworld.article.service.ArticleBySlugUseCase
-import com.github.io.mangjoo.realworld.article.service.ArticlesByFeedUseCase
-import com.github.io.mangjoo.realworld.article.service.GetArticlesUseCase
-import com.github.io.mangjoo.realworld.article.service.WriteArticleUseCase
+import com.github.io.mangjoo.realworld.article.service.*
 import com.github.io.mangjoo.realworld.auth.jwt.JwtDecode
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
@@ -19,6 +17,7 @@ class ArticleController(
     private val getArticlesByFeedUseCase: ArticlesByFeedUseCase,
     private val articleBySlugUseCase: ArticleBySlugUseCase,
     private val writeArticleUseCase: WriteArticleUseCase,
+    private val updateArticleUseCase: UpdateArticleUseCase,
     private val jwtDecode: JwtDecode
 ) {
 
@@ -62,4 +61,12 @@ class ArticleController(
         .let { writeArticleUseCase.write(createArticleRequest, it) }
         .let { ResponseEntity.ok(it) }
 
+    @PutMapping("/api/articles/{slug}")
+    fun updateArticle(
+        @PathVariable slug: String,
+        @RequestBody updateArticleRequest: UpdateArticleRequest,
+        @RequestHeader("Authorization") token: String
+    ) = jwtDecode.tokenToUserId(token)!!
+        .let { updateArticleUseCase.updateArticle(slug, updateArticleRequest, it) }
+        .let { ResponseEntity.ok(it) }
 }

@@ -9,7 +9,6 @@ data class CreateArticleRequest(
     val createArticle: CreateArticle
 ) {
     fun toDomain(author: User) = Article(
-        slug = createArticle.title.replace(" ", "-"),
         title = createArticle.title,
         description = createArticle.description,
         body = createArticle.body,

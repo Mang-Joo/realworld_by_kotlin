@@ -1,6 +1,12 @@
 package com.github.io.mangjoo.realworld.fixture
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.io.mangjoo.realworld.article.api.response.ArticleResponse
 import com.github.io.mangjoo.realworld.article.domain.Article
 import com.github.io.mangjoo.realworld.user.api.SignUpController.SignUpRequest
 import com.github.io.mangjoo.realworld.user.api.UserInfoResponse
@@ -12,22 +18,22 @@ import org.springframework.test.web.servlet.post
 
 class Fixture {
 
-    val user = User("mangjoo@gmail.com", "password", "mangjoo", "bio", "image", true, ROLE_USER)
-        .apply {
-//            id = 1
-        }
+    val user = User(
+        "mangjoo@gmail.com",
+        "password",
+        "mangjoo",
+        "bio",
+        "image",
+        true,
+        ROLE_USER
+    )
 
     val follower = User("follower@gmail.com", "password", "follower")
-        .apply {
-//            id = 2
-            this.follow(user)
-        }
+        .apply { this.follow(user) }
 
     val follower2 = User("followe22r@gmail.com", "password22", "follower22")
-//        .apply { id = 3 }
 
     val article = Article(
-        "title",
         "title",
         "description",
         "body",
@@ -46,8 +52,28 @@ fun MockMvc.signUpUser(
     return post("/api/user") {
         contentType = MediaType.APPLICATION_JSON
         content = jacksonObjectMapper().writeValueAsString(request)
-    }.andReturn()
-        .response
-        .contentAsString
-        .let { jacksonObjectMapper().readValue(it, UserInfoResponse::class.java) }
+    }.andReturn().response.contentAsString.let { jacksonObjectMapper().readValue(it, UserInfoResponse::class.java) }
+}
+
+fun MockMvc.createArticle(
+    token: String
+): ArticleResponse {
+    return post("/api/articles/") {
+        contentType = MediaType.APPLICATION_JSON
+        header("Authorization", "Bearer $token")
+        content = """
+                {
+                    "article": {
+                        "title": "How to train your dragon",
+                        "description": "Ever wonder how?",
+                        "body": "You have to believe",
+                        "tagList": ["reactjs", "angularjs", "dragons"]
+                    }
+                }
+            """.trimIndent()
+    }.andReturn().response.contentAsString.let {
+        ObjectMapper().registerModule(JavaTimeModule()).registerKotlinModule()
+            .enable(SerializationFeature.WRAP_ROOT_VALUE).enable(DeserializationFeature.UNWRAP_ROOT_VALUE)
+            .readValue(it, ArticleResponse::class.java)
+    }
 }

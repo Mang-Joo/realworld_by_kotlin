@@ -1,6 +1,8 @@
 package com.github.io.mangjoo.realworld.article.api
 
+import com.github.io.mangjoo.realworld.fixture.createArticle
 import com.github.io.mangjoo.realworld.fixture.signUpUser
+import com.github.io.mangjoo.realworld.user.api.SignUpController
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -21,13 +23,15 @@ class ArticleControllerTest(
     @Test
     fun getArticlesAPITest() {
 
+        val signUpUser = mockMvc.signUpUser()
+        mockMvc.createArticle(signUpUser.token!!)
+
         mockMvc.get("/api/articles") {
             contentType = APPLICATION_JSON
         }
             .andExpect {
                 status { isOk() }
-                jsonPath("$.articlesCount") { value(0) }
-                jsonPath("$.articles") { isEmpty() }
+                jsonPath("$.articlesCount") { value(1) }
             }
     }
 
@@ -45,13 +49,27 @@ class ArticleControllerTest(
     @Test
     fun getArticlesFeedAPITest() {
         val signUpUser = mockMvc.signUpUser()
+        val createArticle = mockMvc.createArticle(signUpUser.token!!)
+        val signUpUser1 = mockMvc.signUpUser(
+            SignUpController.SignUpRequest(
+                "test@gmail.com",
+                "test",
+                "test",
+            )
+        )
+
+        mockMvc.post("/api/profiles/${signUpUser.userName}/follow") {
+            contentType = APPLICATION_JSON
+            header("Authorization", "Bearer ${signUpUser1.token}")
+        }
 
         mockMvc.get("/api/articles/feed") {
             contentType = APPLICATION_JSON
-            header("Authorization", "Bearer ${signUpUser.token}")
+            header("Authorization", "Bearer ${signUpUser1.token}")
         }
             .andExpect {
                 status { isOk() }
+                jsonPath("$.articlesCount") { value(1) }
             }
     }
 

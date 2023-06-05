@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 class ArticleTest {
 
     private val article = Article(
-        slug = "test",
         title = "test",
         description = "test",
         body = "test",
@@ -40,6 +39,16 @@ class ArticleTest {
 
         assertThat(article.isFavorite("test")).isFalse()
         assertThat(article.isFavorite(username)).isTrue()
+    }
+
+    @Test
+    fun articleUpdate() {
+        val updateValue = "update"
+        val update = article.update(updateValue, updateValue, updateValue)
+        assertThat(update.title).isEqualTo(updateValue)
+        assertThat(update.body).isEqualTo(updateValue)
+        assertThat(update.description).isEqualTo(updateValue)
+        assertThat(update).isEqualTo(article)
     }
 
 }
