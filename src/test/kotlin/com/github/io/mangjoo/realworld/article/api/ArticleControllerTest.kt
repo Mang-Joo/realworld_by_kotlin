@@ -11,6 +11,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
@@ -95,6 +96,31 @@ class ArticleControllerTest(
                 status { isOk() }
                 jsonPath("$.article.title") { value("How to train your dragon") }
                 jsonPath("$.article.slug") { value("How-to-train-your-dragon") }
+                jsonPath("$.article.description") { value("Ever wonder how?") }
+                jsonPath("$.article.body") { value("You have to believe") }
+            }
+    }
+
+    @Test
+    fun updateArticleApiTest() {
+        val signUpUser = mockMvc.signUpUser()
+        val createArticle = mockMvc.createArticle(signUpUser.token!!)
+
+        mockMvc.put("/api/articles/${createArticle.slug}") {
+            contentType = APPLICATION_JSON
+            header("Authorization", "Bearer ${signUpUser.token}")
+            content = """
+                {
+                    "title": "HoHoHo to train your dragon",
+                    "description": "Ever wonder how?",
+                    "body": "You have to believe",
+                }
+            """.trimIndent()
+        }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.article.title") { value("HoHoHo to train your dragon") }
+                jsonPath("$.article.slug") { value("HoHoHo-to-train-your-dragon") }
                 jsonPath("$.article.description") { value("Ever wonder how?") }
                 jsonPath("$.article.body") { value("You have to believe") }
             }
