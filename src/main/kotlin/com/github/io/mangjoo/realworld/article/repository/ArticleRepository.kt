@@ -11,8 +11,8 @@ interface ArticleRepository {
     fun findById(id: Long): Article
     fun findAll(tag: String?, author: String?, favorited: String?, pageRequest: Pageable): Collection<Article>
     fun findFollowArticles(users: Collection<User>, pageRequest: Pageable): Collection<Article>
-
     fun findBySlug(slug: String): Article
+    fun deleteBySlug(slug: String): String
 
     @Component
     class ArticleRepositoryImpl(
@@ -43,6 +43,10 @@ interface ArticleRepository {
 
         override fun findBySlug(slug: String): Article =
             articleJpaRepository.findBySlug(slug)
-            ?: throw IllegalArgumentException("Article not found")
+                ?: throw IllegalArgumentException("Article not found")
+
+        override fun deleteBySlug(slug: String): String = articleJpaRepository
+            .deleteBySlug(slug)
+            .let { slug }
     }
 }

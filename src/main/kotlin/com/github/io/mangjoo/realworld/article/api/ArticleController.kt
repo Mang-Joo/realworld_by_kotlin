@@ -18,6 +18,7 @@ class ArticleController(
     private val articleBySlugUseCase: ArticleBySlugUseCase,
     private val writeArticleUseCase: WriteArticleUseCase,
     private val updateArticleUseCase: UpdateArticleUseCase,
+    private val deleteArticleUseCase: DeleteArticleUseCase,
     private val jwtDecode: JwtDecode
 ) {
 
@@ -69,4 +70,13 @@ class ArticleController(
     ) = jwtDecode.tokenToUserId(token)!!
         .let { updateArticleUseCase.updateArticle(slug, updateArticleRequest, it) }
         .let { ResponseEntity.ok(it) }
+
+    @DeleteMapping("/api/articles/{slug}")
+    fun deleteArticle(
+        @PathVariable slug: String,
+        @RequestHeader("Authorization") token: String
+    ) = jwtDecode.tokenToUserId(token)!!
+        .let { deleteArticleUseCase.deleteArticle(slug, it) }
+        .let { ResponseEntity.ok(it) }
+
 }

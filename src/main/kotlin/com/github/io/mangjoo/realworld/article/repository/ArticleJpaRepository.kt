@@ -37,4 +37,5 @@ interface ArticleJpaRepository : JpaRepository<Article, Long> {
     ): List<Article>
 
     fun findBySlug(slug: String): Article?
+    fun deleteBySlug(slug: String)
 }
