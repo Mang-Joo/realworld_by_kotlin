@@ -1,9 +1,9 @@
-package com.github.io.mangjoo.realworld.article.api.response
+package com.github.io.mangjoo.realworld.article.api.response.article
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonRootName
+import com.github.io.mangjoo.realworld.article.api.response.AuthorResponse
 import com.github.io.mangjoo.realworld.article.domain.Article
-import com.github.io.mangjoo.realworld.user.domain.User
 import java.time.LocalDateTime
 
 @JsonRootName("article")
@@ -24,7 +24,7 @@ data class ArticleResponse(
     val author: AuthorResponse
 ) {
     companion object {
-        fun of(article: Article, user: User?): ArticleResponse {
+        fun of(article: Article, userId: Long?): ArticleResponse {
             return ArticleResponse(
                 slug = article.slug,
                 title = article.title,
@@ -33,9 +33,9 @@ data class ArticleResponse(
                 tagList = article.tags(),
                 createdAt = article.createdDate,
                 updatedAt = article.modifiedDate,
-                favorited = user?.let { article.isFavorite(it.username) } ?: false,
+                favorited = userId?.let { article.isFavorite(userId) } ?: false,
                 favoritesCount = article.favoriteCount(),
-                author = AuthorResponse.of(article.author, user?.isFollowing(article.author) ?: false)
+                author = AuthorResponse.of(article.author, userId?.let { article.author.isFollower(userId) } ?: false)
             )
         }
     }

@@ -1,8 +1,10 @@
 package com.github.io.mangjoo.realworld.article.repository
 
 import com.github.io.mangjoo.realworld.article.domain.Article
+import com.github.io.mangjoo.realworld.config.exception.RealWorldException
 import com.github.io.mangjoo.realworld.user.domain.User
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.stereotype.Component
 
 interface ArticleRepository {
@@ -23,7 +25,7 @@ interface ArticleRepository {
 
         override fun findById(id: Long): Article =
             articleJpaRepository.findById(id)
-                .orElseThrow { IllegalArgumentException("Article not found") }
+                .orElseThrow { throw RealWorldException(NOT_FOUND, "Article not found") }
 
         override fun findAll(
             tag: String?,
@@ -43,10 +45,14 @@ interface ArticleRepository {
 
         override fun findBySlug(slug: String): Article =
             articleJpaRepository.findBySlug(slug)
-                ?: throw IllegalArgumentException("Article not found")
+                ?: throw RealWorldException(NOT_FOUND, "Article not found")
 
-        override fun deleteBySlug(slug: String): String = articleJpaRepository
-            .deleteBySlug(slug)
-            .let { slug }
+        override fun deleteBySlug(slug: String): String = try {
+            articleJpaRepository
+                .deleteBySlug(slug)
+                .let { slug }
+        } catch (e: Exception) {
+            throw RealWorldException(NOT_FOUND, "Article not found")
+        }
     }
 }

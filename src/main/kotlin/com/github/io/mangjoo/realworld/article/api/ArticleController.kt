@@ -1,11 +1,12 @@
 package com.github.io.mangjoo.realworld.article.api
 
-import com.github.io.mangjoo.realworld.article.api.request.CreateArticleRequest
-import com.github.io.mangjoo.realworld.article.api.request.GetArticleRequest
 import com.github.io.mangjoo.realworld.article.api.request.PageRequest
-import com.github.io.mangjoo.realworld.article.api.request.UpdateArticleRequest
-import com.github.io.mangjoo.realworld.article.api.response.GetArticlesResponse
+import com.github.io.mangjoo.realworld.article.api.request.article.CreateArticleRequest
+import com.github.io.mangjoo.realworld.article.api.request.article.GetArticleRequest
+import com.github.io.mangjoo.realworld.article.api.request.article.UpdateArticleRequest
+import com.github.io.mangjoo.realworld.article.api.response.article.GetArticlesResponse
 import com.github.io.mangjoo.realworld.article.service.*
+import com.github.io.mangjoo.realworld.article.service.article.*
 import com.github.io.mangjoo.realworld.auth.jwt.JwtDecode
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 class ArticleController(
-    private val getArticlesUseCase: GetArticlesUseCase,
-    private val getArticlesByFeedUseCase: ArticlesByFeedUseCase,
-    private val articleBySlugUseCase: ArticleBySlugUseCase,
+    private val findArticlesUseCase: FindArticlesUseCase,
+    private val getFindArticlesByFeedUseCase: FindArticlesByFeedUseCase,
+    private val findArticleBySlugUseCase: FindArticleBySlugUseCase,
     private val writeArticleUseCase: WriteArticleUseCase,
     private val updateArticleUseCase: UpdateArticleUseCase,
     private val deleteArticleUseCase: DeleteArticleUseCase,
+    private val addFavoriteArticleUseCase: AddFavoriteArticleUseCase,
+    private val unFavoriteUseCase: UnFavoriteUseCase,
     private val jwtDecode: JwtDecode
 ) {
 
@@ -29,7 +32,7 @@ class ArticleController(
         @PageableDefault pageRequest: PageRequest
     ): ResponseEntity<GetArticlesResponse> = ResponseEntity.ok()
         .body(
-            getArticlesUseCase.getArticles(
+            findArticlesUseCase.getArticles(
                 getArticleRequest.toFilterByArticles(),
                 pageRequest,
                 jwtDecode.tokenToUserId(token)
@@ -42,7 +45,7 @@ class ArticleController(
         @PageableDefault pageRequest: PageRequest
     ): ResponseEntity<GetArticlesResponse> = ResponseEntity.ok()
         .body(
-            getArticlesByFeedUseCase.getArticlesByFeed(
+            getFindArticlesByFeedUseCase.getArticlesByFeed(
                 jwtDecode.tokenToUserId(token)!!,
                 pageRequest
             )
@@ -51,7 +54,7 @@ class ArticleController(
     @GetMapping("/api/articles/{slug}")
     fun getArticle(
         @PathVariable slug: String,
-    ) = articleBySlugUseCase.article(slug)
+    ) = findArticleBySlugUseCase.article(slug)
         .let { ResponseEntity.ok(it) }
 
     @PostMapping("/api/articles/")
@@ -78,5 +81,22 @@ class ArticleController(
     ) = jwtDecode.tokenToUserId(token)!!
         .let { deleteArticleUseCase.deleteArticle(slug, it) }
         .let { ResponseEntity.ok(it) }
+
+    @PostMapping("/api/articles/{slug}/favorite")
+    fun favoriteArticle(
+        @PathVariable slug: String,
+        @RequestHeader("Authorization") token: String
+    ) = jwtDecode.tokenToUserId(token)!!
+        .let { addFavoriteArticleUseCase.add(slug, it) }
+        .let { ResponseEntity.ok(it) }
+
+    @DeleteMapping("/api/articles/{slug}/favorite")
+    fun unFavoriteArticle(
+        @PathVariable slug: String,
+        @RequestHeader("Authorization") token: String
+    ) = jwtDecode.tokenToUserId(token)!!
+        .let { unFavoriteUseCase.unFavorite(slug, it) }
+        .let { ResponseEntity.ok(it) }
+
 
 }

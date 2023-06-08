@@ -1,15 +1,15 @@
-package com.github.io.mangjoo.realworld.article.service
+package com.github.io.mangjoo.realworld.article.service.article
 
-import com.github.io.mangjoo.realworld.article.api.request.FilterByArticles
-import com.github.io.mangjoo.realworld.article.api.response.ArticleResponse
-import com.github.io.mangjoo.realworld.article.api.response.GetArticlesResponse
+import com.github.io.mangjoo.realworld.article.api.request.article.FilterByArticles
+import com.github.io.mangjoo.realworld.article.api.response.article.ArticleResponse
+import com.github.io.mangjoo.realworld.article.api.response.article.GetArticlesResponse
 import com.github.io.mangjoo.realworld.article.repository.ArticleRepository
 import com.github.io.mangjoo.realworld.user.repository.UserRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-interface GetArticlesUseCase {
+interface FindArticlesUseCase {
     fun getArticles(
         filterByArticles: FilterByArticles,
         pageRequest: Pageable,
@@ -17,10 +17,10 @@ interface GetArticlesUseCase {
     ): GetArticlesResponse
 
     @Service
-    class GetArticles(
+    class FindArticles(
         private val articleRepository: ArticleRepository,
         private val userRepository: UserRepository
-    ) : GetArticlesUseCase {
+    ) : FindArticlesUseCase {
 
         @Transactional(readOnly = true)
         override fun getArticles(
@@ -36,8 +36,7 @@ interface GetArticlesUseCase {
             )
 
             return userId?.let { id ->
-                val user = userRepository.findById(id)
-                GetArticlesResponse(articles.map { ArticleResponse.of(it, user) }, articles.size)
+                GetArticlesResponse(articles.map { ArticleResponse.of(it, id) }, articles.size)
             } ?: return GetArticlesResponse(articles.map { ArticleResponse.of(it, null) }, articles.size)
         }
     }

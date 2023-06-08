@@ -17,7 +17,7 @@ interface ArticleJpaRepository : JpaRepository<Article, Long> {
         FROM Article article 
         LEFT JOIN FETCH article.author author
         LEFT JOIN FETCH article.tags.group tags
-        LEFT JOIN FETCH article.favorited favorited
+        LEFT JOIN FETCH article.favoritedUsers favorited
         WHERE (:author IS NULL OR author.userInfo.username in (:author))
         AND (:tag IS NULL OR tags in (:tag))
         AND (:favorited IS NULL OR favorited in (:favorited))

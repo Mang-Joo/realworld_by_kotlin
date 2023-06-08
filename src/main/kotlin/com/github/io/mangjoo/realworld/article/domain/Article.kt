@@ -5,7 +5,6 @@ import com.github.io.mangjoo.realworld.user.domain.User
 import jakarta.persistence.*
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.SQLDelete
 
 @Entity
 @Table(name = "article_table")
@@ -26,7 +25,8 @@ class Article(
     val author: User,
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "article_favorited", joinColumns = [JoinColumn(name = "article_id")])
-    val favorited: MutableSet<String> = mutableSetOf(),
+    @Column(name = "user_id")
+    val favoritedUsers: MutableSet<Long> = mutableSetOf(),
 ) : BaseTimeEntity() {
     constructor(
         title: String,
@@ -44,14 +44,14 @@ class Article(
     )
 
     fun tags(): MutableSet<String> = tags.group
-    fun hasFavorite(): Boolean = favorited.isNotEmpty()
-    fun isFavorite(username: String): Boolean = favorited.contains(username)
-    fun favoriteCount(): Int = favorited.size
-    fun addFavorite(username: String) = favorited.add(username)
+    fun hasFavorite(): Boolean = favoritedUsers.isNotEmpty()
+    fun isFavorite(userId: Long): Boolean = favoritedUsers.contains(userId)
+    fun favoriteCount(): Int = favoritedUsers.size
+    fun addFavorite(userId: Long) = favoritedUsers.add(userId)
+        .let { this }
 
-    override fun toString(): String {
-        return "Article(id=$id, title='$title', description='$description', body='$body', tags=$tags, author='$author', favorited=$favorited)"
-    }
+    fun unFavorite(userId: Long) = favoritedUsers.remove(userId)
+        .let { this }
 
     fun update(title: String, body: String, description: String) = Article(
         id = this.id,
@@ -61,7 +61,7 @@ class Article(
         body = body,
         tags = this.tags,
         author = this.author,
-        favorited = this.favorited
+        favoritedUsers = this.favoritedUsers
     )
 
     override fun equals(other: Any?): Boolean {
