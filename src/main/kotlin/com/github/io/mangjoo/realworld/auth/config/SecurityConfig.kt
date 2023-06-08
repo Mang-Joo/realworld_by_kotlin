@@ -40,8 +40,11 @@ class SecurityConfig(
         .authorizeHttpRequests {
             it.requestMatchers("/api/user/login", "/swagger-ui/**", "/api-docs/**").permitAll()
                 .requestMatchers(POST, "/api/user").permitAll()
-                .requestMatchers(GET, "/api/profiles/{username}").permitAll()
-                .requestMatchers(GET, "/api/articles").permitAll()
+                .requestMatchers(GET,
+                    "/api/profiles/{username}",
+                    "/api/articles",
+                    "/api/articles/{slug}/comments")
+                .permitAll()
                 .anyRequest().authenticated()
         }
         .addFilterBefore(addJwtLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter::class.java)
