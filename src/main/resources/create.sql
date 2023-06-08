@@ -1,7 +1,7 @@
 create table article_favorited
 (
     article_id bigint not null,
-    favorited  varchar(255)
+    user_id  bigint not null unique
 ) engine = InnoDB;
 create table article_table
 (
@@ -32,8 +32,8 @@ create table user_follow
 create table user_table
 (
     user_id       bigint not null auto_increment,
-    username      varchar(255),
-    email         varchar(255),
+    username      varchar(255) unique not null,
+    email         varchar(255) unique not null,
     password      varchar(255),
     bio           varchar(255),
     image         varchar(255),
@@ -43,7 +43,14 @@ create table user_table
     is_enabled    bit    not null,
     primary key (user_id)
 ) engine = InnoDB;
-alter table user_table
-    add constraint UK_eamk4l51hm6yqb8xw37i23kb5 unique (email);
-alter table user_table
-    add constraint UK_en3wad7p8qfu8pcmh62gvef6v unique (username);
+
+create table comment_table
+(
+    comment_id    bigint not null auto_increment,
+    article_id    bigint,
+    author_id     bigint,
+    body          TEXT,
+    created_date  datetime(6),
+    modified_date datetime(6),
+    primary key (comment_id)
+) engine = InnoDB;
