@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.put
+import org.springframework.test.web.servlet.*
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
@@ -111,9 +108,9 @@ class ArticleControllerTest(
             header("Authorization", "Bearer ${signUpUser.token}")
             content = """
                 {
-                    "title": "HoHoHo to train your dragon",
-                    "description": "Ever wonder how?",
-                    "body": "You have to believe",
+                        "title": "HoHoHo to train your dragon",
+                        "description": "Ever wonder how?",
+                        "body": "You have to believe"
                 }
             """.trimIndent()
         }
@@ -123,6 +120,73 @@ class ArticleControllerTest(
                 jsonPath("$.article.slug") { value("HoHoHo-to-train-your-dragon") }
                 jsonPath("$.article.description") { value("Ever wonder how?") }
                 jsonPath("$.article.body") { value("You have to believe") }
+            }
+    }
+
+    @Test
+    fun deleteArticleApiTest() {
+        val signUpUser = mockMvc.signUpUser()
+        val createArticle = mockMvc.createArticle(signUpUser.token!!)
+
+        mockMvc.delete("/api/articles/${createArticle.slug}") {
+            contentType = APPLICATION_JSON
+            header("Authorization", "Bearer ${signUpUser.token}")
+        }
+            .andExpect {
+                status { isOk() }
+            }
+    }
+
+    @Test
+    fun deleteFailTest() {
+        val signUpUser = mockMvc.signUpUser()
+        val createArticle = mockMvc.createArticle(signUpUser.token!!)
+
+        mockMvc.delete("/api/articles/hihi") {
+            contentType = APPLICATION_JSON
+            header("Authorization", "Bearer ${signUpUser.token}")
+        }
+            .andExpect {
+                status {
+                    is4xxClientError()
+                }
+            }
+    }
+
+    @Test
+    fun addFavoritedTest() {
+        val signUpUser = mockMvc.signUpUser()
+        val createArticle = mockMvc.createArticle(signUpUser.token!!)
+
+        mockMvc.post("/api/articles/${createArticle.slug}/favorite") {
+            contentType = APPLICATION_JSON
+            header("Authorization", "Bearer ${signUpUser.token}")
+        }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.article.favorited") { value(true) }
+                jsonPath("$.article.favoritesCount") { value(1) }
+            }
+    }
+
+    @Test
+    fun unFavoriteTest() {
+        val signUpUser = mockMvc.signUpUser()
+        val createArticle = mockMvc.createArticle(signUpUser.token!!)
+
+        mockMvc.post("/api/articles/${createArticle.slug}/favorite") {
+            contentType = APPLICATION_JSON
+            header("Authorization", "Bearer ${signUpUser.token}")
+        }
+
+        mockMvc.delete("/api/articles/${createArticle.slug}/favorite") {
+            contentType = APPLICATION_JSON
+            header("Authorization", "Bearer ${signUpUser.token}")
+        }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.article.favorited") { value(false) }
+                jsonPath("$.article.favoritesCount") { value(0) }
             }
     }
 }
