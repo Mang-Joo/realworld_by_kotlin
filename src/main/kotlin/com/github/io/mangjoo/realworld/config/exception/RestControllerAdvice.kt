@@ -10,6 +10,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 class RestControllerAdvice: ResponseEntityExceptionHandler() {
 
+    @ExceptionHandler(RealWorldException::class)
+    fun handleRealWorldException(exception: RealWorldException): ResponseEntity<ProblemDetail> {
+        return ResponseEntity.status(exception.statusCode)
+            .body(
+                ProblemDetail.forStatus(exception.statusCode).apply {
+                    detail = exception.message
+                    title = exception.statusCode.name
+                }
+            )
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleException(exception: Exception): ResponseEntity<ProblemDetail> {
         logger.error(exception.message, exception)
