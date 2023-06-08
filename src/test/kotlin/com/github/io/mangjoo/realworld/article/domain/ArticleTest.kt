@@ -28,17 +28,17 @@ class ArticleTest {
 
     @Test
     fun addFavorite() {
-        article.addFavorite("username")
+        article.addFavorite(userId = 1L)
         assertThat(article.favoriteCount()).isEqualTo(1)
     }
 
     @Test
     fun isFavorite() {
-        val username = "username"
-        article.addFavorite(username)
+        val userId = 1L
+        article.addFavorite(userId)
 
-        assertThat(article.isFavorite("test")).isFalse()
-        assertThat(article.isFavorite(username)).isTrue()
+        assertThat(article.isFavorite(2L)).isFalse()
+        assertThat(article.isFavorite(userId)).isTrue()
     }
 
     @Test
@@ -49,6 +49,15 @@ class ArticleTest {
         assertThat(update.body).isEqualTo(updateValue)
         assertThat(update.description).isEqualTo(updateValue)
         assertThat(update).isEqualTo(article)
+    }
+
+    @Test
+    fun unFavorite() {
+        val userId = 1L
+        article.addFavorite(userId)
+        article.unFavorite(userId)
+
+        assertThat(article.isFavorite(userId)).isFalse()
     }
 
 }
