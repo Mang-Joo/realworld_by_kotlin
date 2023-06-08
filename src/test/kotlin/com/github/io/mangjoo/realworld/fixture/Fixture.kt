@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.github.io.mangjoo.realworld.article.api.response.ArticleResponse
+import com.github.io.mangjoo.realworld.article.api.response.article.ArticleResponse
+import com.github.io.mangjoo.realworld.article.api.response.comment.CommentResponse
 import com.github.io.mangjoo.realworld.article.domain.Article
 import com.github.io.mangjoo.realworld.user.api.SignUpController.SignUpRequest
 import com.github.io.mangjoo.realworld.user.api.UserInfoResponse
@@ -75,5 +76,26 @@ fun MockMvc.createArticle(
         ObjectMapper().registerModule(JavaTimeModule()).registerKotlinModule()
             .enable(SerializationFeature.WRAP_ROOT_VALUE).enable(DeserializationFeature.UNWRAP_ROOT_VALUE)
             .readValue(it, ArticleResponse::class.java)
+    }
+}
+
+fun MockMvc.writeComment(
+    token: String,
+    slug: String
+): CommentResponse {
+    return post("/api/articles/$slug/comments") {
+        header("Authorization", "Bearer $token")
+        contentType = MediaType.APPLICATION_JSON
+        content = """
+                {
+                    "comment": {
+                        "body": "comment body"
+                    }
+                }
+            """.trimIndent()
+    }.andReturn().response.contentAsString.let {
+        ObjectMapper().registerModule(JavaTimeModule()).registerKotlinModule()
+            .enable(SerializationFeature.WRAP_ROOT_VALUE).enable(DeserializationFeature.UNWRAP_ROOT_VALUE)
+            .readValue(it, CommentResponse::class.java)
     }
 }
