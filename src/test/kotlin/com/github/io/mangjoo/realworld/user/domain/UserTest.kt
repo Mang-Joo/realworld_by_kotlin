@@ -45,7 +45,7 @@ class UserTest {
         val followUser = Fixture().follower
 
         // Then
-        assertThat(followUser.isFollowing(user)).isEqualTo(true)
+        assertThat(followUser.isFollowing(user.id)).isEqualTo(true)
     }
 
     @Test
@@ -58,7 +58,7 @@ class UserTest {
         val follow = follower.follow(user)
 
         // Then
-        assertThat(follow.isFollowing(user)).isEqualTo(true)
+        assertThat(follow.isFollowing(user.id)).isEqualTo(true)
         assertThat(follower.followingCount()).isEqualTo(1)
     }
 
@@ -72,8 +72,18 @@ class UserTest {
         val unFollow = followUser.unFollow(user)
 
         // Then
-        assertThat(user.isFollowing(unFollow)).isFalse()
+        assertThat(user.isFollowing(unFollow.id)).isFalse()
+    }
 
+    @Test
+    fun isFollowerTest() {
+        // Given
+        val user = Fixture().user
+        val followUser = Fixture().follower
 
+        user.follow(followUser)
+
+        // Then
+        assertThat(followUser.isFollower(user.id)).isEqualTo(true)
     }
 }
